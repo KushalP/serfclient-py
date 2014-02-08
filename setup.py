@@ -31,7 +31,7 @@ except:
 setup(
     name='serfclient',
     version=__version__,
-    description='Python client for Serf orchestration tool',
+    description='Python client for the Serf orchestration tool',
     long_description=long_description,
     url='TBD',
     author='Kushal Pisavadia',
