@@ -12,17 +12,20 @@ class SerfConnection(object):
     Manages RPC communication to and from a Serf agent.
     """
 
-    def __init__(self, host='localhost', port=7373):
-        self.host, self.port = host, port
+    def __init__(self, host='localhost', port=7373, timeout=3):
+        self.host = host
+        self.port = port
+        self.timeout = timeout
         self._socket = None
         self._seq = 0
 
     def __repr__(self):
-        return "%(class)s<counter=%(counter)s,host=%(host)s,port=%(port)s>" % {
+        return "%(class)s<counter=%(c)s,host=%(h)s,port=%(p)s,timeout=%(t)s>" % {
             'class': self.__class__.__name__,
-            'counter': self._seq,
-            'host': self.host,
-            'port': self.port,
+            'c': self._seq,
+            'h': self.host,
+            'p': self.port,
+            't': self.timeout,
         }
 
     def call(self, command, params=None):
@@ -55,7 +58,8 @@ class SerfConnection(object):
 
     def _connect(self):
         try:
-            return socket.create_connection((self.host, self.port), 3)
+            return socket.create_connection(
+                (self.host, self.port), self.timeout)
         except socket.error:
             e = sys.exc_info()[1]
             raise SerfConnectionError(self._error_message(e))
