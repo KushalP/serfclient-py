@@ -16,3 +16,7 @@ class TestSerfClientCommands(object):
     def test_initialises_a_serf_connection_on_creation(self):
         serf = client.SerfClient()
         assert serf.connection is not None
+
+    def test_sending_a_simple_event(self):
+        serf = client.SerfClient()
+        assert serf.event('foo', 'bar') == {b'Error': b'', b'Seq': 1}
