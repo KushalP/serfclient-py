@@ -21,7 +21,7 @@ class TestSerfConnection(object):
         rpc = connection.SerfConnection(port=40000)
         with pytest.raises(connection.SerfConnectionError) as exceptionInfo:
             rpc.handshake()
-        assert 'Error 61 connecting localhost:40000. Connection refused.' \
+        assert 'connecting localhost:40000. Connection refused.' \
             in str(exceptionInfo)
 
     def test_connection_to_serf_agent(self):
