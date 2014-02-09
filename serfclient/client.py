@@ -6,7 +6,7 @@ class SerfClient(object):
         self.connection = SerfConnection(host=self.host, port=self.port)
         self.connection.handshake()
 
-    def event(self, name, payload):
+    def event(self, name, payload, coalesce=True):
         return self.connection.call(
             'event',
-            {"Name": name, "Payload": payload, "Coalesce": True})
+            {"Name": name, "Payload": payload, "Coalesce": coalesce})

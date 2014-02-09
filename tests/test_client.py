@@ -20,3 +20,7 @@ class TestSerfClientCommands(object):
     def test_sending_a_simple_event(self):
         serf = client.SerfClient()
         assert serf.event('foo', 'bar') == {b'Error': b'', b'Seq': 1}
+
+    def test_sending_a_non_coalescing_event(self):
+        serf = client.SerfClient()
+        assert serf.event('foo', 'bar', False) == {b'Error': b'', b'Seq': 1}
