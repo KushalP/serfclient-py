@@ -1,3 +1,4 @@
+import msgpack
 import socket
 import sys
 
@@ -27,11 +28,25 @@ class SerfConnection(object):
         Sets up the connection with the Serf agent and does the
         initial handshake.
         """
-        if self._socket:
-            return True
-        else:
+        if self._socket is None:
             self._socket = self._connect()
-            return True
+        return self._call('handshake', {"Version": 1})
+
+    def _call(self, command, params=None):
+        """
+        Sends the provided command to Serf for evaluation, with
+        any parameters as the message body.
+        """
+        header = msgpack.dumps({"Seq": 0, "Command": command})
+
+        if params is not None:
+            body = msgpack.dumps(params)
+            self._socket.sendall(header + body)
+        else:
+            self._socket.sendall(header)
+
+        response = self._socket.recv(4096)
+        return msgpack.loads(response)
 
     def _connect(self):
         try:

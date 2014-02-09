@@ -24,6 +24,6 @@ class TestSerfConnection(object):
         assert 'connecting localhost:40000. Connection refused.' \
             in str(exceptionInfo)
 
-    def test_connection_to_serf_agent(self):
+    def test_handshake_to_serf_agent(self):
         rpc = connection.SerfConnection()
-        assert rpc.handshake() == True
+        assert rpc.handshake() == {'Seq': 0, 'Error': ''}
