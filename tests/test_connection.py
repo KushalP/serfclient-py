@@ -3,16 +3,16 @@ import pytest
 from serfclient import connection
 
 
-class TestConnection(object):
+class TestSerfConnection(object):
     """
-    Tests for the RPC communication object.
+    Tests for the Serf RPC communication object.
     """
 
     def test_has_a_default_host_and_port(self):
-        rpc = connection.RPCConnection()
+        rpc = connection.SerfConnection()
         assert rpc.host == 'localhost'
         assert rpc.port == 7373
 
     def test_representation(self):
-        rpc = connection.RPCConnection()
-        assert str(rpc) == 'RPCConnection<host=localhost,port=7373>'
+        rpc = connection.SerfConnection()
+        assert str(rpc) == 'SerfConnection<host=localhost,port=7373>'

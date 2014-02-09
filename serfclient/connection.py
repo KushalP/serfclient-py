@@ -1,4 +1,4 @@
-class RPCConnection(object):
+class SerfConnection(object):
     """
     Manages RPC communication to and from a Serf agent.
     """
@@ -7,7 +7,8 @@ class RPCConnection(object):
         self.host, self.port = host, port
 
     def __repr__(self):
-        return "RPCConnection<host=%(host)s,port=%(port)s>" % {
+        return "%(class)s<host=%(host)s,port=%(port)s>" % {
+            'class': self.__class__.__name__,
             'host': self.host,
             'port': self.port,
         }
