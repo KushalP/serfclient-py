@@ -26,4 +26,4 @@ class TestSerfConnection(object):
 
     def test_handshake_to_serf_agent(self):
         rpc = connection.SerfConnection()
-        assert rpc.handshake() == {'Seq': 0, 'Error': ''}
+        assert rpc.handshake() == {b'Seq': 0, b'Error': b''}
