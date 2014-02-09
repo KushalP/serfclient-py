@@ -31,6 +31,7 @@ class SerfConnection(object):
             return
         try:
             self._socket = socket.create_connection((self.host, self.port))
+            return True
         except socket.error:
             e = sys.exc_info()[1]
             raise SerfConnectionError(self._error_message(e))
