@@ -15,10 +15,12 @@ class SerfConnection(object):
     def __init__(self, host='localhost', port=7373):
         self.host, self.port = host, port
         self._socket = None
+        self._seq = 0
 
     def __repr__(self):
-        return "%(class)s<host=%(host)s,port=%(port)s>" % {
+        return "%(class)s<counter=%(counter)s,host=%(host)s,port=%(port)s>" % {
             'class': self.__class__.__name__,
+            'counter': self._seq,
             'host': self.host,
             'port': self.port,
         }
@@ -31,7 +33,7 @@ class SerfConnection(object):
         if self._socket is None:
             raise SerfConnectionError('handshake must be made first')
 
-        header = msgpack.dumps({"Seq": 0, "Command": command})
+        header = msgpack.dumps({"Seq": self._counter(), "Command": command})
 
         if params is not None:
             body = msgpack.dumps(params)
@@ -57,6 +59,14 @@ class SerfConnection(object):
         except socket.error:
             e = sys.exc_info()[1]
             raise SerfConnectionError(self._error_message(e))
+
+    def _counter(self):
+        """
+        Returns the current value of the iterator and increments it.
+        """
+        current = self._seq
+        self._seq += 1
+        return current
 
     def _error_message(self, exception):
         return "Error %s connecting %s:%s. %s." % \

@@ -15,7 +15,7 @@ class TestSerfConnection(object):
 
     def test_representation(self):
         rpc = connection.SerfConnection()
-        assert str(rpc) == 'SerfConnection<host=localhost,port=7373>'
+        assert str(rpc) == 'SerfConnection<counter=0,host=localhost,port=7373>'
 
     def test_connection_to_bad_socket_throws_exception(self):
         rpc = connection.SerfConnection(port=40000)
@@ -33,3 +33,11 @@ class TestSerfConnection(object):
         with pytest.raises(connection.SerfConnectionError) as exceptionInfo:
             rpc.call('members')
         assert 'handshake must be made first' in str(exceptionInfo)
+
+    def test_handshake_and_call_increments_counter(self):
+        rpc = connection.SerfConnection()
+        assert str(rpc) == 'SerfConnection<counter=0,host=localhost,port=7373>'
+        rpc.handshake()
+        assert str(rpc) == 'SerfConnection<counter=1,host=localhost,port=7373>'
+        rpc.call('event', {"Name": "foo", "Payload": "test payload", "Coalesce": True})
+        assert str(rpc) == 'SerfConnection<counter=2,host=localhost,port=7373>'
