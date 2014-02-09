@@ -1,3 +1,11 @@
+import socket
+import sys
+
+
+class SerfConnectionError(Exception):
+    pass
+
+
 class SerfConnection(object):
     """
     Manages RPC communication to and from a Serf agent.
@@ -5,6 +13,7 @@ class SerfConnection(object):
 
     def __init__(self, host='localhost', port=7373):
         self.host, self.port = host, port
+        self._socket = None
 
     def __repr__(self):
         return "%(class)s<host=%(host)s,port=%(port)s>" % {
@@ -12,3 +21,20 @@ class SerfConnection(object):
             'host': self.host,
             'port': self.port,
         }
+
+    def handshake(self):
+        """
+        Sets up the connection with the Serf agent and does the
+        initial handshake.
+        """
+        if self._socket:
+            return
+        try:
+            self._socket = socket.create_connection((self.host, self.port))
+        except socket.error:
+            e = sys.exc_info()[1]
+            raise SerfConnectionError(self._error_message(e))
+
+    def _error_message(self, exception):
+        return "Error %s connecting %s:%s. %s." % \
+            (exception.args[0], self.host, self.port, exception.args[1])
