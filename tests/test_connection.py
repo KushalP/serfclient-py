@@ -27,3 +27,9 @@ class TestSerfConnection(object):
     def test_handshake_to_serf_agent(self):
         rpc = connection.SerfConnection()
         assert rpc.handshake() == {b'Seq': 0, b'Error': b''}
+
+    def test_call_throws_exception_if_socket_none(self):
+        rpc = connection.SerfConnection()
+        with pytest.raises(connection.SerfConnectionError) as exceptionInfo:
+            rpc.call('members')
+        assert 'handshake must be made first' in str(exceptionInfo)

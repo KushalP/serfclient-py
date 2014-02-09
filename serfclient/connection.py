@@ -23,20 +23,14 @@ class SerfConnection(object):
             'port': self.port,
         }
 
-    def handshake(self):
-        """
-        Sets up the connection with the Serf agent and does the
-        initial handshake.
-        """
-        if self._socket is None:
-            self._socket = self._connect()
-        return self._call('handshake', {"Version": 1})
-
-    def _call(self, command, params=None):
+    def call(self, command, params=None):
         """
         Sends the provided command to Serf for evaluation, with
         any parameters as the message body.
         """
+        if self._socket is None:
+            raise SerfConnectionError('handshake must be made first')
+
         header = msgpack.dumps({"Seq": 0, "Command": command})
 
         if params is not None:
@@ -47,6 +41,15 @@ class SerfConnection(object):
 
         response = self._socket.recv(4096)
         return msgpack.loads(response)
+
+    def handshake(self):
+        """
+        Sets up the connection with the Serf agent and does the
+        initial handshake.
+        """
+        if self._socket is None:
+            self._socket = self._connect()
+        return self.call('handshake', {"Version": 1})
 
     def _connect(self):
         try:
