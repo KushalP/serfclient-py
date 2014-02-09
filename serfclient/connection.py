@@ -28,10 +28,14 @@ class SerfConnection(object):
         initial handshake.
         """
         if self._socket:
-            return
-        try:
-            self._socket = socket.create_connection((self.host, self.port))
             return True
+        else:
+            self._socket = self._connect()
+            return True
+
+    def _connect(self):
+        try:
+            return socket.create_connection((self.host, self.port), 3)
         except socket.error:
             e = sys.exc_info()[1]
             raise SerfConnectionError(self._error_message(e))
