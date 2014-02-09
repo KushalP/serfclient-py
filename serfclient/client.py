@@ -9,4 +9,4 @@ class SerfClient(object):
     def event(self, name, payload, coalesce=True):
         return self.connection.call(
             'event',
-            {"Name": name, "Payload": payload, "Coalesce": coalesce})
+            {'Name': name, 'Payload': payload, 'Coalesce': coalesce})
