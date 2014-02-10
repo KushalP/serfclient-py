@@ -1,4 +1,7 @@
-from connection import SerfConnection
+try:
+    from serfclient.connection import SerfConnection
+except ImportError:
+    from connection import SerfConnection
 
 class SerfClient(object):
     def __init__(self, host='localhost', port=7373, timeout=3):
