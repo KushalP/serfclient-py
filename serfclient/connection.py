@@ -1,6 +1,6 @@
-import msgpack
 import socket
 import sys
+import umsgpack
 
 
 class SerfConnectionError(Exception):
@@ -18,6 +18,7 @@ class SerfConnection(object):
         self.timeout = timeout
         self._socket = None
         self._seq = 0
+        umsgpack.compatibility = True
 
     def __repr__(self):
         return "%(class)s<counter=%(c)s,host=%(h)s,port=%(p)s,timeout=%(t)s>" % {
@@ -36,16 +37,16 @@ class SerfConnection(object):
         if self._socket is None:
             raise SerfConnectionError('handshake must be made first')
 
-        header = msgpack.dumps({"Seq": self._counter(), "Command": command})
+        header = umsgpack.dumps({"Seq": self._counter(), "Command": command})
 
         if params is not None:
-            body = msgpack.dumps(params)
+            body = umsgpack.dumps(params)
             self._socket.sendall(header + body)
         else:
             self._socket.sendall(header)
 
         response = self._socket.recv(4096)
-        return msgpack.loads(response)
+        return umsgpack.loads(response)
 
     def handshake(self):
         """
