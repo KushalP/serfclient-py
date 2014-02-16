@@ -29,3 +29,17 @@ class TestSerfClientCommands(object):
         serf = client.SerfClient()
         assert serf.force_leave('bad-node-name') == {b'Error': '', b'Seq': 1}
 
+    def test_joining_a_non_existent_node(self):
+        serf = client.SerfClient()
+        assert serf.join(['127.0.0.1:23000']) == \
+            {b'Error': b'dial tcp 127.0.0.1:23000: connection refused', b'Seq': 1}
+
+    def test_joining_an_existing_node_fails(self):
+        serf = client.SerfClient()
+        assert serf.join(['127.0.0.1:7373']) == \
+            {b'Error': b'Reading remote state failed: EOF', b'Seq': 1}
+
+    def test_providing_a_single_value_should_put_it_inside_a_list(self):
+        serf = client.SerfClient()
+        assert serf.join('127.0.0.1:7373') == \
+            {b'Error': b'Reading remote state failed: EOF', b'Seq': 1}

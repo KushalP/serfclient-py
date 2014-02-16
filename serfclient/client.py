@@ -21,3 +21,10 @@ class SerfClient(object):
         return self.connection.call(
             'force-leave',
             {"Node": name})
+
+    def join(self, location):
+        if not isinstance(location, (list, tuple)):
+            location = [location]
+        return self.connection.call(
+            'join',
+            {"Existing": location, "Replay": False})
