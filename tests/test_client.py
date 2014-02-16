@@ -27,7 +27,7 @@ class TestSerfClientCommands(object):
 
     def test_force_leaving_of_a_node(self):
         serf = client.SerfClient()
-        assert serf.force_leave('bad-node-name') == {b'Error': '', b'Seq': 1}
+        assert serf.force_leave('bad-node-name') == {b'Error': b'', b'Seq': 1}
 
     def test_joining_a_non_existent_node(self):
         serf = client.SerfClient()
