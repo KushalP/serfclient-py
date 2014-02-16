@@ -33,7 +33,7 @@ setup(
     version=__version__,
     description='Python client for the Serf orchestration tool',
     long_description=long_description,
-    url='TBD',
+    url='https://github.com/KushalP/serfclient-py',
     author='Kushal Pisavadia',
     author_email='kushal@violentlymild.com',
     maintainer='Kushal Pisavadia',
