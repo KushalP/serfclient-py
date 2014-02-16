@@ -16,3 +16,8 @@ class SerfClient(object):
         return self.connection.call(
             'event',
             {'Name': name, 'Payload': payload, 'Coalesce': coalesce})
+
+    def force_leave(self, name):
+        return self.connection.call(
+            'force-leave',
+            {"Node": name})
