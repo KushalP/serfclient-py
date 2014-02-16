@@ -7,6 +7,16 @@ service discovery and orchestration.
 .. image:: https://secure.travis-ci.org/KushalP/serfclient-py.png?branch=master
         :target: http://travis-ci.org/KushalP/serfclient-py
 
+Getting Started
+---------------
+
+.. code-block:: python
+
+    from serfclient.client import SerfClient
+
+    client = SerfClient()
+    client.event('foo', 'bar')
+
 Development
 ------------
 
