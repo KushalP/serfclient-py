@@ -1,5 +1,5 @@
-serfclient-py
-=============
+serfclient
+==========
 
 The Python interface to Serf, the decentralised solution for
 service discovery and orchestration.
@@ -44,7 +44,7 @@ Getting Started
 Development
 ------------
 
-serfclient-py requires a running Serf agent. See `Serf's agent documentation
+serfclient requires a running Serf agent. See `Serf's agent documentation
 <http://www.serfdom.io/docs/agent/basics.html>`_ for instructions.
 
 To run the tests, simply:
