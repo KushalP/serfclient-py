@@ -10,8 +10,8 @@ service discovery and orchestration.
 Installation
 ------------
 
-serfclient requires a running Serf agent. See Serf's agent documentation for
-further information.
+serfclient requires a running Serf agent. See `Serf's agent documentation
+<http://www.serfdom.io/docs/agent/basics.html>`_ for instructions.
 
 To install serfclient, simply:
 
