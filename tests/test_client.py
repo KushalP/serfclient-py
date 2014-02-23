@@ -23,7 +23,12 @@ class TestSerfClientCommands(object):
 
     def test_sending_a_non_coalescing_event(self):
         serf = client.SerfClient()
-        assert serf.event('foo', 'bar', False) == {b'Error': b'', b'Seq': 1}
+        assert serf.event('foo', 'bar') == {b'Error': b'', b'Seq': 1}
+
+    def test_event_payload_is_optional(self):
+        serf = client.SerfClient()
+        assert serf.event('foo') == {b'Error': b'', b'Seq': 1}
+        assert serf.event('bar', coalesce=False) == {b'Error': b'', b'Seq': 2}
 
     def test_force_leaving_of_a_node(self):
         serf = client.SerfClient()

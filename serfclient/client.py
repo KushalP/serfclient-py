@@ -13,7 +13,7 @@ class SerfClient(object):
             host=self.host, port=self.port, timeout=self.timeout)
         self.connection.handshake()
 
-    def event(self, name, payload, coalesce=True):
+    def event(self, name, payload=None, coalesce=True):
         """
         Send an event to the cluster. Can take an optional payload as well,
         which will be sent in the form that it's provided.
