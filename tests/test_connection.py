@@ -47,5 +47,6 @@ class TestSerfConnection(object):
         assert 'counter=0' in str(rpc)
         rpc.handshake()
         assert 'counter=1' in str(rpc)
-        rpc.call('event', {"Name": "foo", "Payload": "test payload", "Coalesce": True})
+        rpc.call('event',
+                 {"Name": "foo", "Payload": "test payload", "Coalesce": True})
         assert 'counter=2' in str(rpc)

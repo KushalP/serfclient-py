@@ -37,7 +37,8 @@ class TestSerfClientCommands(object):
     def test_joining_a_non_existent_node(self):
         serf = client.SerfClient()
         assert serf.join(['127.0.0.1:23000']) == \
-            {b'Error': b'dial tcp 127.0.0.1:23000: connection refused', b'Seq': 1}
+            {b'Error': b'dial tcp 127.0.0.1:23000: connection refused',
+             b'Seq': 1}
 
     def test_joining_an_existing_node_fails(self):
         serf = client.SerfClient()
