@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.0.3
+-----
+
+- Fix for issue #1: event payloads can be optional
+
 0.0.2
 -----
 
