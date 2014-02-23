@@ -10,6 +10,7 @@ before_install:
   - ./serf agent &
 install:
   - pip install -e . --use-mirrors
-script: "python setup.py test"
+  - pip install pep8
+script: "python setup.py test && pep8 --repeat --show-source ."
 notifications:
   email: false
