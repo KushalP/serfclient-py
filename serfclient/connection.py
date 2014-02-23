@@ -21,13 +21,12 @@ class SerfConnection(object):
         umsgpack.compatibility = True
 
     def __repr__(self):
-        return "%(class)s<counter=%(c)s,host=%(h)s,port=%(p)s,timeout=%(t)s>" % {
-            'class': self.__class__.__name__,
-            'c': self._seq,
-            'h': self.host,
-            'p': self.port,
-            't': self.timeout,
-        }
+        return "%(class)s<counter=%(c)s,host=%(h)s,port=%(p)s,timeout=%(t)s>" \
+            % {'class': self.__class__.__name__,
+               'c': self._seq,
+               'h': self.host,
+               'p': self.port,
+               't': self.timeout}
 
     def call(self, command, params=None):
         """
