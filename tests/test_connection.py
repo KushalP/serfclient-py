@@ -48,3 +48,9 @@ class TestSerfConnection(object):
         rpc.call('event',
                  {"Name": "foo", "Payload": "test payload", "Coalesce": True})
         assert 'counter=2' in str(rpc)
+
+    def test_msgpack_object_stream_decode(self, rpc):
+        rpc.handshake()
+        result = rpc.call('members')
+        assert result[0] == {b'Error': b'', b'Seq': 1}
+        assert 'Members' in result[1].keys()
