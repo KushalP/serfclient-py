@@ -3,6 +3,7 @@ import sys
 import msgpack
 from io import BytesIO
 
+
 class SerfConnectionError(Exception):
     pass
 

@@ -26,10 +26,12 @@ class TestSerfClientCommands(object):
 
     def test_event_payload_is_optional(self, serf):
         assert serf.event('foo')[0] == {b'Error': b'', b'Seq': 1}
-        assert serf.event('bar', coalesce=False)[0] == {b'Error': b'', b'Seq': 2}
+        assert serf.event('bar', coalesce=False)[0] == \
+            {b'Error': b'', b'Seq': 2}
 
     def test_force_leaving_of_a_node(self, serf):
-        assert serf.force_leave('bad-node-name')[0] == {b'Error': b'', b'Seq': 1}
+        assert serf.force_leave('bad-node-name')[0] == \
+            {b'Error': b'', b'Seq': 1}
 
     def test_joining_a_non_existent_node(self, serf):
         assert serf.join(['127.0.0.1:23000']) == \
