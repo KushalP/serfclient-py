@@ -53,4 +53,4 @@ class TestSerfConnection(object):
         rpc.handshake()
         result = rpc.call('members')
         assert result[0] == {b'Error': b'', b'Seq': 1}
-        assert 'Members' in result[1].keys()
+        assert b'Members' in result[1].keys()
