@@ -1,6 +1,7 @@
 import socket
 import sys
-import umsgpack
+import msgpack
+from io import BytesIO
 
 
 class SerfConnectionError(Exception):
@@ -18,7 +19,6 @@ class SerfConnection(object):
         self.timeout = timeout
         self._socket = None
         self._seq = 0
-        umsgpack.compatibility = True
 
     def __repr__(self):
         return "%(class)s<counter=%(c)s,host=%(h)s,port=%(p)s,timeout=%(t)s>" \
@@ -36,16 +36,27 @@ class SerfConnection(object):
         if self._socket is None:
             raise SerfConnectionError('handshake must be made first')
 
-        header = umsgpack.dumps({"Seq": self._counter(), "Command": command})
+        header = msgpack.packb({"Seq": self._counter(), "Command": command})
 
         if params is not None:
-            body = umsgpack.dumps(params)
+            body = msgpack.packb(params)
             self._socket.sendall(header + body)
         else:
             self._socket.sendall(header)
 
-        response = self._socket.recv(4096)
-        return umsgpack.loads(response)
+        buf = BytesIO()
+        buf.write(self._socket.recv(4096))
+        buf.seek(0)
+
+        result = {'header': None, 'body': None}
+        for item in msgpack.Unpacker(buf):
+            if result['header'] is None:
+                result['header'] = item
+            else:
+                result['body'] = item
+                break
+
+        return (result['header'], result['body'])
 
     def handshake(self):
         """
@@ -54,7 +65,7 @@ class SerfConnection(object):
         """
         if self._socket is None:
             self._socket = self._connect()
-        return self.call('handshake', {"Version": 1})
+        return self.call('handshake', {"Version": 1})[0]
 
     def _connect(self):
         try:
