@@ -10,6 +10,14 @@ class TestSerfResult(object):
         assert r.body is None
 
     def test_provides_a_pretty_printed_form_for_repl_use(self):
-        r = result.SerfResult(head={"a": 1, "b": 2}, body=('foo', 'bar'))
+        r = result.SerfResult(head={"a": 1}, body=('foo', 'bar'))
         assert str(r) == \
-            "SerfResult<head={'a': 1, 'b': 2},body=('foo', 'bar')>"
+            "SerfResult<head={'a': 1},body=('foo', 'bar')>"
+
+    def test_can_convert_to_list(self):
+        r = result.SerfResult(head=1, body=2)
+        assert sorted(list(r)) == [1, 2]
+
+    def test_can_convert_to_tuple(self):
+        r = result.SerfResult(head=1, body=2)
+        assert sorted(tuple(r)) == [1, 2]
