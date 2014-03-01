@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.1.0
+-----
+
+- Added SerfClient.members() function to provide member information
+- SerfClient returns bounded SerfResult objects to hold the head
+  and body of the response
+
 0.0.3
 -----
 
