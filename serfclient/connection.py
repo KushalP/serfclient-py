@@ -1,7 +1,12 @@
 import socket
 import sys
 import msgpack
+
 from io import BytesIO
+try:
+    from serfclient.result import SerfResult
+except ImportError:
+    from result import SerfResult
 
 
 class SerfConnectionError(Exception):
@@ -48,15 +53,15 @@ class SerfConnection(object):
         buf.write(self._socket.recv(4096))
         buf.seek(0)
 
-        result = {'header': None, 'body': None}
+        response = SerfResult()
         for item in msgpack.Unpacker(buf):
-            if result['header'] is None:
-                result['header'] = item
+            if response.head is None:
+                response.head = item
             else:
-                result['body'] = item
+                response.body = item
                 break
 
-        return (result['header'], result['body'])
+        return response
 
     def handshake(self):
         """
@@ -65,7 +70,7 @@ class SerfConnection(object):
         """
         if self._socket is None:
             self._socket = self._connect()
-        return self.call('handshake', {"Version": 1})[0]
+        return self.call('handshake', {"Version": 1})
 
     def _connect(self):
         try:

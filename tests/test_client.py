@@ -19,31 +19,35 @@ class TestSerfClientCommands(object):
         assert serf.connection is not None
 
     def test_sending_a_simple_event(self, serf):
-        assert serf.event('foo', 'bar')[0] == {b'Error': b'', b'Seq': 1}
+        assert serf.event('foo', 'bar').head == {b'Error': b'', b'Seq': 1}
 
     def test_sending_a_non_coalescing_event(self, serf):
-        assert serf.event('foo', 'bar')[0] == {b'Error': b'', b'Seq': 1}
+        assert serf.event('foo', 'bar').head == {b'Error': b'', b'Seq': 1}
 
     def test_event_payload_is_optional(self, serf):
-        assert serf.event('foo')[0] == {b'Error': b'', b'Seq': 1}
-        assert serf.event('bar', coalesce=False)[0] == \
+        assert serf.event('foo').head == {b'Error': b'', b'Seq': 1}
+        assert serf.event('bar', coalesce=False).head == \
             {b'Error': b'', b'Seq': 2}
 
     def test_force_leaving_of_a_node(self, serf):
-        assert serf.force_leave('bad-node-name')[0] == \
+        assert serf.force_leave('bad-node-name').head == \
             {b'Error': b'', b'Seq': 1}
 
     def test_joining_a_non_existent_node(self, serf):
-        assert serf.join(['127.0.0.1:23000']) == \
-            ({b'Error': b'dial tcp 127.0.0.1:23000: connection refused',
-             b'Seq': 1}, {b'Num': 0})
+        join = serf.join(['127.0.0.1:23000'])
+        assert join.head == \
+            {b'Error': b'dial tcp 127.0.0.1:23000: connection refused',
+             b'Seq': 1}
+        assert join.body == {b'Num': 0}
 
     def test_joining_an_existing_node_fails(self, serf):
-        assert serf.join(['127.0.0.1:7373']) == \
-            ({b'Error': b'Reading remote state failed: EOF', b'Seq': 1},
-             {b'Num': 0})
+        join = serf.join(['127.0.0.1:7373'])
+        assert join.head == {b'Error': b'Reading remote state failed: EOF',
+                             b'Seq': 1}
+        assert join.body == {b'Num': 0}
 
     def test_providing_a_single_value_should_put_it_inside_a_list(self, serf):
-        assert serf.join('127.0.0.1:7373') == \
-            ({b'Error': b'Reading remote state failed: EOF', b'Seq': 1},
-             {b'Num': 0})
+        join = serf.join('127.0.0.1:7373')
+        assert join.head == {b'Error': b'Reading remote state failed: EOF',
+                             b'Seq': 1}
+        assert join.body == {b'Num': 0}

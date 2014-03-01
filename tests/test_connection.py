@@ -34,7 +34,7 @@ class TestSerfConnection(object):
             in str(exceptionInfo)
 
     def test_handshake_to_serf_agent(self, rpc):
-        assert rpc.handshake() == {b'Seq': 0, b'Error': b''}
+        assert rpc.handshake().head == {b'Seq': 0, b'Error': b''}
 
     def test_call_throws_exception_if_socket_none(self, rpc):
         with pytest.raises(connection.SerfConnectionError) as exceptionInfo:
@@ -52,5 +52,5 @@ class TestSerfConnection(object):
     def test_msgpack_object_stream_decode(self, rpc):
         rpc.handshake()
         result = rpc.call('members')
-        assert result[0] == {b'Error': b'', b'Seq': 1}
-        assert b'Members' in result[1].keys()
+        assert result.head == {b'Error': b'', b'Seq': 1}
+        assert b'Members' in result.body.keys()
