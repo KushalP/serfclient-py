@@ -41,7 +41,7 @@ setup(
     keywords=['Serf', 'orchestration', 'service discovery'],
     license='MIT',
     packages=['serfclient'],
-    install_requires=['msgpack-python >= 0.4.1'],
+    install_requires=['msgpack-python >= 0.4.0'],
     tests_require=['pytest'],
     cmdclass={'test': PyTest}
 )
