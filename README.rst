@@ -5,9 +5,11 @@ The Python interface to Serf, the decentralised solution for
 service discovery and orchestration.
 
 .. image:: https://secure.travis-ci.org/KushalP/serfclient-py.png?branch=master
-           :target: http://travis-ci.org/KushalP/serfclient-py
+    :alt: Travis-CI badge
+    :target: http://travis-ci.org/KushalP/serfclient-py
 .. image:: https://gemnasium.com/KushalP/serfclient-py.png
-           :target: https://gemnasium.com/KushalP/serfclient-py
+    :alt: Gemnasium badge
+    :target: https://gemnasium.com/KushalP/serfclient-py
 
 Installation
 ------------
