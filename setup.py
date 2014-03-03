@@ -42,6 +42,6 @@ setup(
     license='MIT',
     packages=['serfclient'],
     install_requires=['msgpack-python >= 0.4.0'],
-    tests_require=['pytest'],
+    tests_require=['pytest >= 2.5.2'],
     cmdclass={'test': PyTest}
 )
