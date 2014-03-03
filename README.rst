@@ -13,6 +13,9 @@ service discovery and orchestration.
 .. image:: https://pypip.in/v/serfclient/badge.png
     :alt: PyPI latest version badge
     :target: https://pypi.python.org/pypi/serfclient
+.. image:: https://coveralls.io/repos/KushalP/serfclient-py/badge.png?branch=master
+    :alt: Code coverage badge
+    :target: https://coveralls.io/r/KushalP/serfclient-py?branch=master
 
 Installation
 ------------
