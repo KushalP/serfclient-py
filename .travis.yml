@@ -10,8 +10,10 @@ before_install:
   - ./serf agent &
 install:
   - pip install -e . --use-mirrors
+  - pip install coverage
 script:
   - python setup.py test
+  - coverage report -m serfclient/*.py
 after_script:
   - coveralls
 notifications:
