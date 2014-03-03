@@ -12,8 +12,6 @@ install:
   - pip install -e . --use-mirrors
 script:
   - python setup.py test
-  - pep8 --repeat --show-source serfclient tests
-  - py.test --cov=serfclient --cov-report=term-missing
 after_script:
   - coveralls
 notifications:

@@ -11,7 +11,10 @@ try:
     class PyTest(TestCommand):
         def finalize_options(self):
             TestCommand.finalize_options(self)
-            self.test_args = []
+            self.test_args = ['--pep8', 'serfclient',
+                              '--pep8', 'tests',
+                              '--cov', 'serfclient',
+                              '--cov-report', 'term-missing']
             self.test_suite = True
 
         def run_tests(self):
@@ -42,9 +45,9 @@ setup(
     license='MIT',
     packages=['serfclient'],
     install_requires=['msgpack-python >= 0.4.0'],
-    tests_require=['pep8 >= 1.4.6',
-                   'pytest >= 2.5.2',
+    tests_require=['pytest >= 2.5.2',
                    'pytest-cov >= 1.6',
+                   'pytest-pep8 >= 1.0.5',
                    'python-coveralls >= 2.4.2'],
     cmdclass={'test': PyTest}
 )
