@@ -43,7 +43,6 @@ setup(
     packages=['serfclient'],
     install_requires=['msgpack-python >= 0.4.0'],
     tests_require=['pytest >= 2.5.2',
-                   'pytest-cov >= 1.6',
-                   'python-coveralls >= 2.4.2'],
+                   'pytest-cov >= 1.6'],
     cmdclass={'test': PyTest}
 )
