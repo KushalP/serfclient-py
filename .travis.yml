@@ -12,5 +12,7 @@ install:
   - pip install -e . --use-mirrors
   - pip install pep8
 script: "python setup.py test && pep8 --repeat --show-source ."
+after_script:
+  - coveralls
 notifications:
   email: false
