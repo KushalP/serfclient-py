@@ -12,9 +12,7 @@ try:
         def finalize_options(self):
             TestCommand.finalize_options(self)
             self.test_args = ['--pep8', 'serfclient',
-                              '--pep8', 'tests',
-                              '--cov', 'serfclient',
-                              '--cov-report', 'term-missing']
+                              '--pep8', 'tests']
             self.test_suite = True
 
         def run_tests(self):
