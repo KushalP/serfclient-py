@@ -10,9 +10,10 @@ before_install:
   - ./serf agent &
 install:
   - pip install -e . --use-mirrors
-  - pip install coverage
+  - pip install coverage pep8
 script:
   - coverage run --source=serfclient setup.py test
+  - pep8 --repeat --show-source serfclient tests
 after_success:
   - coveralls
 notifications:
