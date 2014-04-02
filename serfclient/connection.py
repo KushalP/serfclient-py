@@ -2,7 +2,6 @@ import socket
 import sys
 import msgpack
 
-from io import BytesIO
 try:
     from serfclient.result import SerfResult
 except ImportError:
@@ -49,12 +48,11 @@ class SerfConnection(object):
         else:
             self._socket.sendall(header)
 
-        buf = BytesIO()
-        buf.write(self._socket.recv(4096))
-        buf.seek(0)
+        unpacker = msgpack.Unpacker()
+        unpacker.feed(self._socket.recv(4096))
 
         response = SerfResult()
-        for item in msgpack.Unpacker(buf):
+        for item in unpacker:
             if response.head is None:
                 response.head = item
             else:
