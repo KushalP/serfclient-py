@@ -51,3 +51,7 @@ class TestSerfClientCommands(object):
         assert join.head == {b'Error': b'Reading remote state failed: EOF',
                              b'Seq': 1}
         assert join.body == {b'Num': 0}
+
+    def test_member_list_is_not_empty(self, serf):
+        members = serf.members()
+        assert len(members.body['Members']) > 0

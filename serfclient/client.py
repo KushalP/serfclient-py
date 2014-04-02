@@ -22,6 +22,12 @@ class SerfClient(object):
             'event',
             {'Name': name, 'Payload': payload, 'Coalesce': coalesce})
 
+    def members(self):
+        """
+        Lists members of a Serf cluster.
+        """
+        return self.connection.call('members')
+
     def force_leave(self, name):
         """
         Force a node to leave the cluster.
