@@ -1,3 +1,3 @@
 __version__ = '0.1.0'
 
-from client import SerfClient
+from serfclient.client import SerfClient
