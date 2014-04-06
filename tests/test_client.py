@@ -54,4 +54,4 @@ class TestSerfClientCommands(object):
 
     def test_member_list_is_not_empty(self, serf):
         members = serf.members()
-        assert len(members.body['Members']) > 0
+        assert len(members.body[b'Members']) > 0
