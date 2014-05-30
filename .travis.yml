@@ -9,8 +9,9 @@ before_install:
   - unzip 0.4.1_linux_amd64.zip
   - ./serf agent &
 install:
+  - pip install msgpack-python
   - pip install -e . --use-mirrors
-  - pip install coverage coveralls pep8 msgpack-python
+  - pip install coverage coveralls pep8
 script:
   - coverage run --source=serfclient setup.py test
   - coverage report -m
