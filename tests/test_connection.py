@@ -46,11 +46,21 @@ class TestSerfConnection(object):
         rpc.handshake()
         assert 'counter=1' in str(rpc)
         rpc.call('event',
-                 {"Name": "foo", "Payload": "test payload", "Coalesce": True})
+                 {"Name": "foo", "Payload": "test payload", "Coalesce": True},
+                 expect_body = False)
         assert 'counter=2' in str(rpc)
 
     def test_msgpack_object_stream_decode(self, rpc):
         rpc.handshake()
+        result = rpc.call('members')
+        assert result.head == {b'Error': b'', b'Seq': 1}
+        assert b'Members' in result.body.keys()
+
+    def test_small_socket_recv_size(self, rpc):
+        # Read a paltry 7 bytes at a time, intended to stress the buffered
+        # socket reading and msgpack message handling logic.
+        rpc.handshake()
+        rpc._socket_recv_size = 7
         result = rpc.call('members')
         assert result.head == {b'Error': b'', b'Seq': 1}
         assert b'Members' in result.body.keys()
