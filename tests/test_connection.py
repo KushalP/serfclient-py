@@ -47,7 +47,7 @@ class TestSerfConnection(object):
         assert 'counter=1' in str(rpc)
         rpc.call('event',
                  {"Name": "foo", "Payload": "test payload", "Coalesce": True},
-                 expect_body = False)
+                 expect_body=False)
         assert 'counter=2' in str(rpc)
 
     def test_msgpack_object_stream_decode(self, rpc):

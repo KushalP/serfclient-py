@@ -93,7 +93,7 @@ class SerfConnection(object):
         """
         if self._socket is None:
             self._socket = self._connect()
-        return self.call('handshake', {"Version": 1}, expect_body = False)
+        return self.call('handshake', {"Version": 1}, expect_body=False)
 
     def _connect(self):
         try:
