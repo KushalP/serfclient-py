@@ -55,3 +55,31 @@ class TestSerfClientCommands(object):
     def test_member_list_is_not_empty(self, serf):
         members = serf.members()
         assert len(members.body[b'Members']) > 0
+
+    def test_member_filtering_name(self, serf):
+        # Get current node name.
+        members = serf.members()
+        name = members.body[b'Members'][0][b'Name']
+
+        members = serf.members(name=name)
+        assert len(members.body[b'Members']) == 1
+
+    def test_member_filtering_name_no_matches(self, serf):
+        members = serf.members(name="no_node_has_this_name")
+        assert len(members.body[b'Members']) == 0
+
+    def test_member_filtering_status_alive(self, serf):
+        members = serf.members(status="alive")
+        assert len(members.body[b'Members']) > 0
+
+    def test_member_filtering_status_no_matches(self, serf):
+        members = serf.members(status="invalid_status")
+        assert len(members.body[b'Members']) == 0
+
+    def test_member_filtering_tags(self, serf):
+        members = serf.members(tags={'foo': 'bar'})
+        assert len(members.body[b'Members']) == 1
+
+    def test_member_filtering_tags_regex(self, serf):
+        members = serf.members(tags={'foo': 'ba[rz]'})
+        assert len(members.body[b'Members']) == 1
