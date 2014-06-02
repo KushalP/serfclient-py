@@ -13,6 +13,14 @@ class SerfConnectionError(Exception):
     pass
 
 
+class SerfTimeout(SerfConnectionError):
+    pass
+
+
+class SerfProtocolError(SerfConnectionError):
+    pass
+
+
 class SerfConnection(object):
     """
     Manages RPC communication to and from a Serf agent.
@@ -66,9 +74,9 @@ class SerfConnection(object):
             try:
                 unpacker.feed(self._socket.recv(self._socket_recv_size))
             except socket.timeout:
-                raise SerfConnectionError(
-                    "timeout while waiting for an RPC response. (Have %s so far)",
-                    response)
+                raise SerfTimeout(
+                    "timeout while waiting for an RPC response. (Have %s so"
+                    "far)", response)
 
             # Might have received enough to deserialise one or more
             # messages, try to fill out the response object.
@@ -78,8 +86,9 @@ class SerfConnection(object):
                 elif response.body is None:
                     response.body = message
                 else:
-                    raise SerfConnectionError("protocol handler got more than"
-                        "2 messages. Unexpected message is: %s", message)
+                    raise SerfProtocolError(
+                        "protocol handler got more than 2 messages. "
+                        "Unexpected message is: %s", message)
 
                 # Expecting one fewer message now.
                 messages_expected -= 1

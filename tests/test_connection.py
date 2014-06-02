@@ -1,4 +1,5 @@
 import pytest
+import time
 
 from serfclient import connection
 
@@ -64,3 +65,37 @@ class TestSerfConnection(object):
         result = rpc.call('members')
         assert result.head == {b'Error': b'', b'Seq': 1}
         assert b'Members' in result.body.keys()
+
+    def test_rpc_timeout(self, rpc):
+        # Avoid delaying the test too much.
+        rpc.timeout = 0.1
+        rpc.handshake()
+        with pytest.raises(connection.SerfTimeout):
+            # Incorrectly set expect_body to True for an event RPC,
+            # which will wait around for a body it'll never get,
+            # which should cause a SerfTimeout exception.
+            rpc.call('event',
+                     {"Name": "foo", "Payload": "test payload",
+                      "Coalesce": True},
+                     expect_body=True)
+
+    def test_rxing_too_many_messages(self, rpc):
+        rpc.handshake()
+
+        # Sneakily send two members requests using the socket directly, and
+        # then don't read from the socket in order to make sure the socket
+        # receive buffer has many more responses than expected the next time
+        # a real RPC call is made.
+        for index in range(2):
+            rpc._socket.sendall(
+                connection.msgpack.packb({"Seq": rpc._counter(),
+                                          "Command": "members"}))
+
+        # Allow serf a moment to make sure it has responded to both requests
+        # and that the socket recieve buffer has the content.
+        time.sleep(0.05)
+
+        # This call should recieve all the previous responses at once
+        # and it should fail.
+        with pytest.raises(connection.SerfProtocolError):
+            rpc.call('members')
