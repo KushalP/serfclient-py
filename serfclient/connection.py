@@ -1,6 +1,7 @@
 import socket
 import sys
 import msgpack
+import resource
 
 try:
     from serfclient.result import SerfResult
@@ -12,10 +13,22 @@ class SerfConnectionError(Exception):
     pass
 
 
+class SerfTimeout(SerfConnectionError):
+    pass
+
+
+class SerfProtocolError(SerfConnectionError):
+    pass
+
+
 class SerfConnection(object):
     """
     Manages RPC communication to and from a Serf agent.
     """
+
+    # Read from the RPC socket in blocks of this many bytes.
+    # (Typically 4k)
+    _socket_recv_size = resource.getpagesize()
 
     def __init__(self, host='localhost', port=7373, timeout=3):
         self.host = host
@@ -32,7 +45,7 @@ class SerfConnection(object):
                'p': self.port,
                't': self.timeout}
 
-    def call(self, command, params=None):
+    def call(self, command, params=None, expect_body=True):
         """
         Sends the provided command to Serf for evaluation, with
         any parameters as the message body.
@@ -48,16 +61,37 @@ class SerfConnection(object):
         else:
             self._socket.sendall(header)
 
-        unpacker = msgpack.Unpacker()
-        unpacker.feed(self._socket.recv(4096))
+        # The number of msgpack messages that are expected
+        # in response to this command.
+        messages_expected = 2 if expect_body else 1
 
         response = SerfResult()
-        for item in unpacker:
-            if response.head is None:
-                response.head = item
-            else:
-                response.body = item
-                break
+        unpacker = msgpack.Unpacker()
+
+        # Continue reading from the network until the expected number of
+        # msgpack messages have been received.
+        while messages_expected > 0:
+            try:
+                unpacker.feed(self._socket.recv(self._socket_recv_size))
+            except socket.timeout:
+                raise SerfTimeout(
+                    "timeout while waiting for an RPC response. (Have %s so"
+                    "far)", response)
+
+            # Might have received enough to deserialise one or more
+            # messages, try to fill out the response object.
+            for message in unpacker:
+                if response.head is None:
+                    response.head = message
+                elif response.body is None:
+                    response.body = message
+                else:
+                    raise SerfProtocolError(
+                        "protocol handler got more than 2 messages. "
+                        "Unexpected message is: %s", message)
+
+                # Expecting one fewer message now.
+                messages_expected -= 1
 
         return response
 
@@ -68,7 +102,7 @@ class SerfConnection(object):
         """
         if self._socket is None:
             self._socket = self._connect()
-        return self.call('handshake', {"Version": 1})
+        return self.call('handshake', {"Version": 1}, expect_body=False)
 
     def _connect(self):
         try:

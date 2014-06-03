@@ -20,7 +20,8 @@ class SerfClient(object):
         """
         return self.connection.call(
             'event',
-            {'Name': name, 'Payload': payload, 'Coalesce': coalesce})
+            {'Name': name, 'Payload': payload, 'Coalesce': coalesce},
+            expect_body=False)
 
     def members(self):
         """
@@ -34,7 +35,7 @@ class SerfClient(object):
         """
         return self.connection.call(
             'force-leave',
-            {"Node": name})
+            {"Node": name}, expect_body=False)
 
     def join(self, location):
         """
