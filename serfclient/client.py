@@ -23,11 +23,31 @@ class SerfClient(object):
             {'Name': name, 'Payload': payload, 'Coalesce': coalesce},
             expect_body=False)
 
-    def members(self):
+    def members(self, name=None, status=None, tags=None):
         """
-        Lists members of a Serf cluster.
+        Lists members of a Serf cluster, optionally filtered by one or more
+        filters:
+
+        `name` is a string, supporting regex matching on node names.
+        `status` is a string, supporting regex matching on node status.
+        `tags` is a dict of tag names and values, supporting regex matching
+        on values.
         """
-        return self.connection.call('members')
+        filters = {}
+
+        if name is not None:
+            filters['Name'] = name
+
+        if status is not None:
+            filters['Status'] = status
+
+        if tags is not None:
+            filters['Tags'] = tags
+
+        if len(filters) == 0:
+            return self.connection.call('members')
+        else:
+            return self.connection.call('members-filtered', filters)
 
     def force_leave(self, name):
         """
