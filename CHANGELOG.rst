@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.3.0
+-----
+
+- SerfClient object available as `serfclient.SerfClient` instead of
+  `serfclient.client.SerfClient` - `#4 <https://github.com/KushalP/serfclient-py/pull/4>`_
+- No longer using a fixed size to read from the RPC socket - `#5 <https://github.com/KushalP/serfclient-py/pull/5>`_
+- Add support for filtering the members list - `#6 <https://github.com/KushalP/serfclient-py/pull/6>`_
+
 0.2.0
 -----
 
