@@ -100,7 +100,6 @@ class TestSerfConnection(object):
         with pytest.raises(connection.SerfProtocolError):
             rpc.call('members')
 
-
     def test_connection_closed(self, rpc):
         rpc.handshake()
 

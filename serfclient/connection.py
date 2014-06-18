@@ -73,7 +73,7 @@ class SerfConnection(object):
         while messages_expected > 0:
             try:
                 buf = self._socket.recv(self._socket_recv_size)
-                if len(buf) == 0: # Connection was closed.
+                if len(buf) == 0:  # Connection was closed.
                     raise SerfConnectionError("Connection closed by peer")
                 unpacker.feed(buf)
             except socket.timeout:
