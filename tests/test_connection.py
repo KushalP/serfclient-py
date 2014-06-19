@@ -99,3 +99,20 @@ class TestSerfConnection(object):
         # and it should fail.
         with pytest.raises(connection.SerfProtocolError):
             rpc.call('members')
+
+    def test_connection_closed(self, rpc):
+        rpc.handshake()
+
+        # Mock socket.recv returning an empty string, as it does when the
+        # connection has been closed.
+        class MockSocket:
+            def sendall(self, content):
+                pass
+
+            def recv(self, size):
+                return ""
+
+        rpc._socket = MockSocket()
+
+        with pytest.raises(connection.SerfConnectionError):
+            rpc.handshake()
