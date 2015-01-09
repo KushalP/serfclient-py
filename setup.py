@@ -2,8 +2,6 @@
 import os
 import sys
 
-from serfclient import __version__
-
 try:
     from setuptools import setup
     from setuptools.command.test import test as TestCommand
@@ -30,7 +28,7 @@ except:
 
 setup(
     name='serfclient',
-    version=__version__,
+    version='0.3.0',
     description='Python client for the Serf orchestration tool',
     long_description=long_description,
     url='https://github.com/KushalP/serfclient-py',
