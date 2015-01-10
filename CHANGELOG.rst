@@ -1,6 +1,15 @@
 Changelog
 =========
 
+0.4.0
+-----
+
+- Fix for spinning forever doing a socket recv after serf
+  stops/restarts - `#7
+  <https://github.com/KushalP/serfclient-py/pull/7>`_
+- Fixing dependency on `serfclient.__version__` in setup.py - `#8
+  <https://github.com/KushalP/serfclient-py/pull/8>`_
+
 0.3.0
 -----
 
