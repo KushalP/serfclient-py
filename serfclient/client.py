@@ -1,13 +1,24 @@
+import os
+
 try:
     from serfclient.connection import SerfConnection
 except ImportError:
     from connection import SerfConnection
 
 
+def _get_env_host_and_port():
+    env_host, env_port = None, None
+    serf_rpc_addr = os.getenv('SERF_RPC_ADDR')
+    if serf_rpc_addr:
+        env_host, env_port = serf_rpc_addr.split(':')
+    return env_host, env_port
+
+
 class SerfClient(object):
-    def __init__(self, host='localhost', port=7373, timeout=3):
-        self.host = host
-        self.port = port
+    def __init__(self, host=None, port=None, timeout=3):
+        env_host, env_port = _get_env_host_and_port()
+        self.host = host or env_host or 'localhost'
+        self.port = port or env_port or 7373
         self.timeout = timeout
         self.connection = SerfConnection(
             host=self.host, port=self.port, timeout=self.timeout)
