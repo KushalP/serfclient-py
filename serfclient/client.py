@@ -1,17 +1,36 @@
+import os
+
 try:
     from serfclient.connection import SerfConnection
 except ImportError:
     from connection import SerfConnection
 
 
+def _get_env_host_and_port():
+    env_host, env_port = None, None
+    serf_rpc_addr = os.getenv('SERF_RPC_ADDR')
+    if serf_rpc_addr:
+        env_host, env_port = serf_rpc_addr.split(':')
+    return env_host, env_port
+
+
+def _get_env_rpc_auth():
+    return os.getenv('SERF_RPC_AUTH')
+
+
 class SerfClient(object):
-    def __init__(self, host='localhost', port=7373, timeout=3):
-        self.host = host
-        self.port = port
+    def __init__(self, host=None, port=None, rpc_auth=None, timeout=3):
+        env_host, env_port = _get_env_host_and_port()
+        self.host = host or env_host or 'localhost'
+        self.port = port or env_port or 7373
         self.timeout = timeout
         self.connection = SerfConnection(
             host=self.host, port=self.port, timeout=self.timeout)
         self.connection.handshake()
+        env_rpc_auth = _get_env_rpc_auth()
+        self.rpc_auth = rpc_auth or env_rpc_auth or None
+        if self.rpc_auth:
+            self.connection.auth(self.rpc_auth)
 
     def event(self, name, payload=None, coalesce=True):
         """
