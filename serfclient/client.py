@@ -5,13 +5,15 @@ except ImportError:
 
 
 class SerfClient(object):
-    def __init__(self, host='localhost', port=7373, timeout=3):
+    def __init__(self, host='localhost', port=7373, rpc_auth=None, timeout=3):
         self.host = host
         self.port = port
         self.timeout = timeout
         self.connection = SerfConnection(
             host=self.host, port=self.port, timeout=self.timeout)
         self.connection.handshake()
+        if rpc_auth:
+            self.connection.auth(rpc_auth)
 
     def event(self, name, payload=None, coalesce=True):
         """

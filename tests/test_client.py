@@ -1,3 +1,4 @@
+import mock
 import pytest
 
 from serfclient import client
@@ -10,6 +11,13 @@ class TestSerfClientCommands(object):
     @pytest.fixture
     def serf(self):
         return client.SerfClient()
+
+    @mock.patch('serfclient.client.SerfConnection')
+    def test_rpc_auth(self, mock_serf_connection_class):
+        mock_serf_connection = mock.MagicMock()
+        mock_serf_connection_class.return_value = mock_serf_connection
+        serf = client.SerfClient(rpc_auth='secret')
+        mock_serf_connection.auth.assert_called_once_with('secret')
 
     def test_has_a_default_host_and_port(self, serf):
         assert serf.host == 'localhost'

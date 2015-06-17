@@ -107,6 +107,14 @@ class SerfConnection(object):
             self._socket = self._connect()
         return self.call('handshake', {"Version": 1}, expect_body=False)
 
+    def auth(self, auth_key):
+        """
+        Performs the initial authentication on connect
+        """
+        if self._socket is None:
+            self._socket = self._connect()
+        return self.call('auth', {"AuthKey": auth_key}, expect_body=False)
+
     def _connect(self):
         try:
             return socket.create_connection(
