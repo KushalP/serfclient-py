@@ -1,6 +1,17 @@
 Changelog
 =========
 
+0.5.0
+-----
+
+- Support `RPC
+  auth <https://serfdom.io/docs/agent/options.html#rpc_auth>`_ token
+  when communicating with secure serf members -
+  `#12 <https://github.com/KushalP/serfclient-py/pull/12>`_
+- Added `EnvironmentConfig` object that can read Serf environment
+  variables in an easy way -
+  `#17 <https://github.com/KushalP/serfclient-py/pull/17>`_
+
 0.4.0
 -----
 
