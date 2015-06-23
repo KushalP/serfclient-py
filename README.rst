@@ -10,7 +10,7 @@ service discovery and orchestration.
 .. image:: https://gemnasium.com/KushalP/serfclient-py.png
     :alt: Gemnasium badge
     :target: https://gemnasium.com/KushalP/serfclient-py
-.. image:: https://pypip.in/v/serfclient/badge.png
+.. image:: https://badge.fury.io/py/serfclient.svg
     :alt: PyPI latest version badge
     :target: https://pypi.python.org/pypi/serfclient
 .. image:: https://coveralls.io/repos/KushalP/serfclient-py/badge.png?branch=master
