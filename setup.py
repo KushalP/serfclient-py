@@ -28,7 +28,7 @@ except:
 
 setup(
     name='serfclient',
-    version='0.4.0',
+    version='0.5.0',
     description='Python client for the Serf orchestration tool',
     long_description=long_description,
     url='https://github.com/KushalP/serfclient-py',
