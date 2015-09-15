@@ -1,5 +1,6 @@
 import mock
 import pytest
+import re
 
 from serfclient import client
 
@@ -92,3 +93,10 @@ class TestSerfClientCommands(object):
     def test_member_filtering_tags_regex(self, serf):
         members = serf.members(tags={'foo': 'ba[rz]'})
         assert len(members.body[b'Members']) == 1
+
+    def test_member_check_addr(self, serf):
+        # regression test for issue 20
+        members = serf.members()
+        ip_addr = members.body[b'Members'][0][b'Addr']
+
+        assert re.match(b'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', ip_addr)
