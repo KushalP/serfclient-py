@@ -66,7 +66,7 @@ class SerfConnection(object):
         messages_expected = 2 if expect_body else 1
 
         response = SerfResult()
-        unpacker = msgpack.Unpacker()
+        unpacker = msgpack.Unpacker(object_hook=self._decode_addr_key)
 
         # Continue reading from the network until the expected number of
         # msgpack messages have been received.
@@ -134,3 +134,28 @@ class SerfConnection(object):
     def _error_message(self, exception):
         return "Error %s connecting %s:%s. %s." % \
             (exception.args[0], self.host, self.port, exception.args[1])
+
+    def _decode_addr_key(self, obj_dict):
+        """
+        Callback function to handle the decoding of the 'Addr' field.
+
+        Serf msgpack 'Addr' as an IPv6 address, and the data needs to be unpack
+        using socket.inet_ntop().
+
+        See: https://github.com/KushalP/serfclient-py/issues/20
+
+        :param obj_dict: A dictionary containing the msgpack map.
+        :return: A dictionary with the correct 'Addr' format.
+        """
+        key = b'Addr'
+        if key in obj_dict:
+            ip_addr = socket.inet_ntop(socket.AF_INET6, obj_dict[key])
+
+            # Check if the address is an IPv4 mapped IPv6 address:
+            # ie. ::ffff:xxx.xxx.xxx.xxx
+            if ip_addr.startswith('::ffff:'):
+                ip_addr = ip_addr.lstrip('::ffff:')
+
+            obj_dict[key] = ip_addr.encode('utf-8')
+
+        return obj_dict

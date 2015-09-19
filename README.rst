@@ -61,4 +61,5 @@ To run the tests, simply:
 
 .. code-block:: bash
 
+    $ ./serf agent --tag foo=bar  # start serf agent
     $ python setup.py test
