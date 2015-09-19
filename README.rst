@@ -27,19 +27,19 @@ To install serfclient, simply:
 
 .. code-block:: bash
 
-    $ sudo pip install serfclient
+    $ pip install serfclient
 
 or alternatively (you really should be using pip though):
 
 .. code-block:: bash
 
-    $ sudo easy_install serfclient
+    $ easy_install serfclient
 
 or from source:
 
 .. code-block:: bash
 
-    $ sudo python setup.py install
+    $ python setup.py install
 
 Getting Started
 ---------------
