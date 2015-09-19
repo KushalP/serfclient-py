@@ -23,7 +23,7 @@ Installation
 serfclient requires a running Serf agent. See `Serf's agent documentation
 <http://www.serfdom.io/docs/agent/basics.html>`_ for instructions.
 
-To install serfclient, simply:
+To install serfclient, run the following command:
 
 .. code-block:: bash
 
@@ -57,7 +57,7 @@ Development
 serfclient requires a running Serf agent. See `Serf's agent documentation
 <http://www.serfdom.io/docs/agent/basics.html>`_ for instructions.
 
-To run the tests, simply:
+You can run the tests using the following commands:
 
 .. code-block:: bash
 
