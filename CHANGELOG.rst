@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.6.0
+-----
+
+- Add a custom msgpack data unpacker for the `Addr` field - `#21
+  <https://github.com/KushalP/serfclient-py/pull/21>`_
+
 0.5.0
 -----
 
