@@ -68,3 +68,9 @@ class SerfClient(object):
         return self.connection.call(
             'join',
             {"Existing": location, "Replay": False})
+
+    def stats(self):
+        """
+        Obtain operator debugging information about the running Serf agent.
+        """
+        return self.connection.call('stats')

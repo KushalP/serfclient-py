@@ -100,3 +100,9 @@ class TestSerfClientCommands(object):
         ip_addr = members.body[b'Members'][0][b'Addr']
 
         assert re.match(b'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', ip_addr)
+
+    def test_stats_is_well_formed(self, serf):
+        stats = serf.stats()
+        for key in [b'agent', b'runtime', b'serf', b'tags']:
+            assert key in stats.body
+            assert isinstance(stats.body[key], dict)
