@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.7.0
+-----
+
+- Add a `stats` command, which provides debugging information about
+  the running serf agent - `#22
+  <https://github.com/KushalP/serfclient-py/pull/22>`_
+
 0.6.0
 -----
 
