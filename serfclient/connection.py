@@ -149,13 +149,20 @@ class SerfConnection(object):
         """
         key = b'Addr'
         if key in obj_dict:
-            ip_addr = socket.inet_ntop(socket.AF_INET6, obj_dict[key])
+            try:
+                # Try to convert a packed IPv6 address.
+                # Note: Call raises ValueError if address is actually IPv4.
+                ip_addr = socket.inet_ntop(socket.AF_INET6, obj_dict[key])
 
-            # Check if the address is an IPv4 mapped IPv6 address:
-            # ie. ::ffff:xxx.xxx.xxx.xxx
-            if ip_addr.startswith('::ffff:'):
-                ip_addr = ip_addr.lstrip('::ffff:')
+                # Check if the address is an IPv4 mapped IPv6 address:
+                # ie. ::ffff:xxx.xxx.xxx.xxx
+                if ip_addr.startswith('::ffff:'):
+                    ip_addr = ip_addr.lstrip('::ffff:')
 
-            obj_dict[key] = ip_addr.encode('utf-8')
+                obj_dict[key] = ip_addr.encode('utf-8')
+            except ValueError:
+                # Try to convert a packed IPv4 address.
+                ip_addr = socket.inet_ntop(socket.AF_INET, obj_dict[key])
+                obj_dict[key] = ip_addr.encode('utf-8')
 
         return obj_dict
