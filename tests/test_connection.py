@@ -5,6 +5,12 @@ import time
 from serfclient import connection
 
 
+def extract_addr(rpc, ip_address, address_family=socket.AF_INET6):
+    packed_ip_format = socket.inet_pton(address_family, ip_address)
+    r = rpc._decode_addr_key({b'Addr': packed_ip_format})
+    return r[b'Addr'].decode('utf-8')
+
+
 class TestSerfConnection(object):
     """
     Tests for the Serf RPC communication object.
@@ -119,22 +125,12 @@ class TestSerfConnection(object):
             rpc.handshake()
 
     def test_decode_addr_key_ipv6(self, rpc):
-        key = b'Addr'
-        ip_addr = '2001:a:b:c:1:2:3:4'
-        dict = {key: socket.inet_pton(socket.AF_INET6, ip_addr)}
-        result = rpc._decode_addr_key(dict)
-        assert result[key].decode('utf-8') == ip_addr
+        ip_address = '2001:a:b:c:1:2:3:4'
+        assert extract_addr(rpc, ip_address) == ip_address
 
     def test_decode_addr_key_ipv4_mapped_ipv6(self, rpc):
-        key = b'Addr'
-        ip_addr = '::ffff:192.168.0.1'
-        dict = {key: socket.inet_pton(socket.AF_INET6, ip_addr)}
-        result = rpc._decode_addr_key(dict)
-        assert result[key].decode('utf-8') == '192.168.0.1'
+        assert extract_addr(rpc, '::ffff:192.168.0.1') == '192.168.0.1'
 
     def test_decode_addr_key_ipv4(self, rpc):
-        key = b'Addr'
-        ip_addr = '192.168.0.1'
-        dict = {key: socket.inet_pton(socket.AF_INET, ip_addr)}
-        result = rpc._decode_addr_key(dict)
-        assert result[key].decode('utf-8') == ip_addr
+        ip_address = '192.168.0.1'
+        assert extract_addr(rpc, ip_address, socket.AF_INET) == ip_address
