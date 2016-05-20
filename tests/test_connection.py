@@ -1,4 +1,5 @@
 import pytest
+import socket
 import time
 
 from serfclient import connection
@@ -116,3 +117,24 @@ class TestSerfConnection(object):
 
         with pytest.raises(connection.SerfConnectionError):
             rpc.handshake()
+
+    def test_decode_addr_key_ipv6(self, rpc):
+        key = b'Addr'
+        ip_addr = '2001:a:b:c:1:2:3:4'
+        dict = {key: socket.inet_pton(socket.AF_INET6, ip_addr)}
+        result = rpc._decode_addr_key(dict)
+        assert result[key].decode('utf-8') == ip_addr
+
+    def test_decode_addr_key_ipv4_mapped_ipv6(self, rpc):
+        key = b'Addr'
+        ip_addr = '::ffff:192.168.0.1'
+        dict = {key: socket.inet_pton(socket.AF_INET6, ip_addr)}
+        result = rpc._decode_addr_key(dict)
+        assert result[key].decode('utf-8') == '192.168.0.1'
+
+    def test_decode_addr_key_ipv4(self, rpc):
+        key = b'Addr'
+        ip_addr = '192.168.0.1'
+        dict = {key: socket.inet_pton(socket.AF_INET, ip_addr)}
+        result = rpc._decode_addr_key(dict)
+        assert result[key].decode('utf-8') == ip_addr
