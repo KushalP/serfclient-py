@@ -13,7 +13,6 @@ before_install:
   - ./serf agent &
   - sleep 1 ; ./serf tags -set foo=bar
 install:
-  - pip install -e . --use-mirrors
   - pip install 'coverage<4.0.0' coveralls pep8
   - python setup.py develop
 script:
