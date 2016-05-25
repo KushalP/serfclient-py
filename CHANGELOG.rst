@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.7.1
+-----
+
+- Bugfix for packed IPv4 addresses - `#25
+  <https://github.com/KushalP/serfclient-py/pull/25>`_
+
 0.7.0
 -----
 
