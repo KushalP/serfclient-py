@@ -1,6 +1,13 @@
 Changelog
 =========
 
+1.0.0
+-----
+
+- Support serf v0.7 - `#28
+  <https://github.com/KushalP/serfclient-py/issues/28>`_
+- Breaking change with v0.7.1 which can be seen in the issue above
+
 0.7.1
 -----
 
