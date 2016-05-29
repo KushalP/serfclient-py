@@ -8,8 +8,8 @@ python:
   - "2.7"
   - "2.6"
 before_install:
-  - wget https://releases.hashicorp.com/serf/0.6.4/serf_0.6.4_linux_amd64.zip
-  - unzip serf_0.6.4_linux_amd64.zip
+  - wget https://releases.hashicorp.com/serf/0.7.0/serf_0.7.0_linux_amd64.zip
+  - unzip serf_0.7.0_linux_amd64.zip
   - ./serf agent &
   - sleep 1 ; ./serf tags -set foo=bar
 install:

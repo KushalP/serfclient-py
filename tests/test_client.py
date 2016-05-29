@@ -44,22 +44,26 @@ class TestSerfClientCommands(object):
             {b'Error': b'', b'Seq': 1}
 
     def test_joining_a_non_existent_node(self, serf):
-        join = serf.join(['127.0.0.1:23000'])
+        address = '127.0.0.1:23000'
+        join = serf.join([address])
         assert join.head == \
-            {b'Error': b'dial tcp 127.0.0.1:23000: connection refused',
-             b'Seq': 1}
+            {
+                b'Error': 'dial tcp {addr}: getsockopt: {reason}'.format(
+                    addr=address,
+                    reason='connection refused'
+                ).encode('utf-8'),
+                b'Seq': 1
+            }
         assert join.body == {b'Num': 0}
 
     def test_joining_an_existing_node_fails(self, serf):
         join = serf.join(['127.0.0.1:7373'])
-        assert join.head == {b'Error': b'Reading remote state failed: EOF',
-                             b'Seq': 1}
+        assert join.head == {b'Error': b'EOF', b'Seq': 1}
         assert join.body == {b'Num': 0}
 
     def test_providing_a_single_value_should_put_it_inside_a_list(self, serf):
         join = serf.join('127.0.0.1:7373')
-        assert join.head == {b'Error': b'Reading remote state failed: EOF',
-                             b'Seq': 1}
+        assert join.head == {b'Error': b'EOF', b'Seq': 1}
         assert join.body == {b'Num': 0}
 
     def test_member_list_is_not_empty(self, serf):
