@@ -74,3 +74,11 @@ class SerfClient(object):
         Obtain operator debugging information about the running Serf agent.
         """
         return self.connection.call('stats')
+
+    def shutdown(self):
+        """
+        Shutdown and cleanup open connections to Serf agent.
+        """
+        if self.connection:
+            self.connection.disconnect()
+            self.connection = None

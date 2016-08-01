@@ -134,3 +134,9 @@ class TestSerfConnection(object):
     def test_decode_addr_key_ipv4(self, rpc):
         ip_address = '192.168.0.1'
         assert extract_addr(rpc, ip_address, socket.AF_INET) == ip_address
+
+    def test_disconnect(self, rpc):
+        rpc.handshake()
+        assert rpc._socket is not None
+        rpc.disconnect()
+        assert rpc._socket is None
