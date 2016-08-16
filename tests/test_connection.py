@@ -135,8 +135,8 @@ class TestSerfConnection(object):
         ip_address = '192.168.0.1'
         assert extract_addr(rpc, ip_address, socket.AF_INET) == ip_address
 
-    def test_disconnect(self, rpc):
+    def test_close(self, rpc):
         rpc.handshake()
         assert rpc._socket is not None
-        rpc.disconnect()
+        rpc.close()
         assert rpc._socket is None

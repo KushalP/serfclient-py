@@ -167,9 +167,9 @@ class SerfConnection(object):
 
         return obj_dict
 
-    def disconnect(self):
+    def close(self):
         """
-        Disconnect the connection with the Serf agent.
+        Close the connection with the Serf agent.
         """
         if self._socket:
             self._socket.close()

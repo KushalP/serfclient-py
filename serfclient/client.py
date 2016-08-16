@@ -75,10 +75,10 @@ class SerfClient(object):
         """
         return self.connection.call('stats')
 
-    def shutdown(self):
+    def close(self):
         """
-        Shutdown and cleanup open connections to Serf agent.
+        Close connection to Serf agent.
         """
         if self.connection:
-            self.connection.disconnect()
+            self.connection.close()
             self.connection = None

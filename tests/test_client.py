@@ -111,7 +111,7 @@ class TestSerfClientCommands(object):
             assert key in stats.body
             assert isinstance(stats.body[key], dict)
 
-    def test_shutdown(self, serf):
+    def test_close(self, serf):
         assert serf.connection is not None
-        serf.shutdown()
+        serf.close()
         assert serf.connection is None
