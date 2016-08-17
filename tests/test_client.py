@@ -110,3 +110,8 @@ class TestSerfClientCommands(object):
         for key in [b'agent', b'runtime', b'serf', b'tags']:
             assert key in stats.body
             assert isinstance(stats.body[key], dict)
+
+    def test_close(self, serf):
+        assert serf.connection is not None
+        serf.close()
+        assert serf.connection is None

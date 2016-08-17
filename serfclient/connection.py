@@ -166,3 +166,11 @@ class SerfConnection(object):
                 obj_dict[key] = ip_addr.encode('utf-8')
 
         return obj_dict
+
+    def close(self):
+        """
+        Close the connection with the Serf agent.
+        """
+        if self._socket:
+            self._socket.close()
+            self._socket = None
