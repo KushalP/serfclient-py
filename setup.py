@@ -26,6 +26,14 @@ try:
 except:
     long_description = None
 
+test_requires = [
+    'pytest >= 2.5.2',
+    'pytest-cov >= 1.6',
+]
+
+if sys.version_info[:2] < (3, 0):
+    test_requires.append('mock')
+
 setup(
     name='serfclient',
     version='1.0.0',
@@ -40,7 +48,6 @@ setup(
     license='MIT',
     packages=['serfclient'],
     install_requires=['msgpack-python >= 0.4.0'],
-    tests_require=['pytest >= 2.5.2',
-                   'pytest-cov >= 1.6'],
-    cmdclass={'test': PyTest}
+    tests_require=test_requires,
+    cmdclass={'test': PyTest},
 )
