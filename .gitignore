@@ -1,3 +1,6 @@
+# Ignore the serf binary we might place in the working directory
+/serf
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
