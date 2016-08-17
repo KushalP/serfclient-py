@@ -36,7 +36,7 @@ if sys.version_info[:2] < (3, 0):
 
 setup(
     name='serfclient',
-    version='1.0.0',
+    version='1.1.0',
     description='Python client for the Serf orchestration tool',
     long_description=long_description,
     url='https://github.com/KushalP/serfclient-py',

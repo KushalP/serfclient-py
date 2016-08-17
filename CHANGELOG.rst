@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.1.0
+-----
+
+- Provide a way to close connections - `#31
+  <https://github.com/KushalP/serfclient-py/issues/29>`_
+- Add `mock` as a test dependency - `#30
+  <https://github.com/KushalP/serfclient-py/issues/30>`_
+
 1.0.0
 -----
 
