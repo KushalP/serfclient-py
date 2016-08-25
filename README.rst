@@ -46,10 +46,11 @@ Getting Started
 
 .. code-block:: python
 
+    from contextlib import closing
     from serfclient.client import SerfClient
 
-    client = SerfClient()
-    client.event('foo', 'bar')
+    with closing(SerfClient()) as client:
+        client.event('foo', 'bar')
 
 Development
 ------------
