@@ -2,6 +2,7 @@ import mock
 import pytest
 import re
 
+from contextlib import closing
 from serfclient import client
 
 
@@ -9,16 +10,17 @@ class TestSerfClientCommands(object):
     """
     Common commands for the library
     """
-    @pytest.fixture
+    @pytest.yield_fixture
     def serf(self):
-        return client.SerfClient()
+        with closing(client.SerfClient()) as serf:
+            yield serf
 
     @mock.patch('serfclient.client.SerfConnection')
     def test_rpc_auth(self, mock_serf_connection_class):
         mock_serf_connection = mock.MagicMock()
         mock_serf_connection_class.return_value = mock_serf_connection
-        serf = client.SerfClient(rpc_auth='secret')
-        assert serf.connection is not None
+        with closing(client.SerfClient(rpc_auth='secret')) as serf:
+            assert serf.connection is not None
         mock_serf_connection.auth.assert_called_once_with('secret')
 
     def test_has_a_default_host_and_port(self, serf):
