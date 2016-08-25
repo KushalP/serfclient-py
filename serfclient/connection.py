@@ -138,7 +138,14 @@ class SerfConnection(object):
                     "timeout while waiting for an RPC response. (Have %s so"
                     "far)", response)
 
-            response.head, response.body = unpacker
+            for message in unpacker:
+                if response.head is None:
+                    response.head = message
+                elif response.body is None:
+                    response.body = message
+                else:
+                    raise SerfProtocolError("protocol handler got more than 2 messages. Unexpected message is: %s", message)
+
             sec = response.head.get('Seq')
 
             stop_reading = callback(response, *args, **kwargs)
