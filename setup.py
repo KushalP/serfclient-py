@@ -28,7 +28,7 @@ except:
 
 test_requires = [
     'pytest >= 2.5.2',
-    'pytest-cov >= 1.6',
+    'pytest-cov >= 2.3',
 ]
 
 if sys.version_info[:2] < (3, 0):
