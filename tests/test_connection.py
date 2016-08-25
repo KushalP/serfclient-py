@@ -2,6 +2,7 @@ import pytest
 import socket
 import time
 
+from contextlib import closing
 from serfclient import connection
 
 
@@ -15,9 +16,10 @@ class TestSerfConnection(object):
     """
     Tests for the Serf RPC communication object.
     """
-    @pytest.fixture
+    @pytest.yield_fixture
     def rpc(self):
-        return connection.SerfConnection()
+        with closing(connection.SerfConnection()) as conn:
+            yield conn
 
     def test_has_a_default_host_port_and_timeout(self, rpc):
         assert rpc.host == 'localhost'
@@ -25,21 +27,25 @@ class TestSerfConnection(object):
         assert rpc.timeout == 3
 
     def test_allows_passing_host_port_and_timeout(self):
-        rpc = connection.SerfConnection(host='foo', port=455, timeout=500)
-        assert rpc.host == 'foo'
-        assert rpc.port == 455
-        assert rpc.timeout == 500
+        with closing(
+                connection.SerfConnection(host='foo', port=455, timeout=500)
+        ) as rpc:
+            assert rpc.host == 'foo'
+            assert rpc.port == 455
+            assert rpc.timeout == 500
 
     def test_representation(self, rpc):
         assert str(rpc) == \
             'SerfConnection<counter=0,host=localhost,port=7373,timeout=3>'
 
     def test_connection_to_bad_socket_throws_exception(self):
-        rpc = connection.SerfConnection(port=40000)
-        with pytest.raises(connection.SerfConnectionError) as exceptionInfo:
-            rpc.handshake()
-        assert 'connecting localhost:40000. Connection refused.' \
-            in str(exceptionInfo)
+        with closing(connection.SerfConnection(port=40000)) as rpc:
+            with pytest.raises(
+                    connection.SerfConnectionError
+            ) as exceptionInfo:
+                rpc.handshake()
+            assert 'connecting localhost:40000. Connection refused.' \
+                in str(exceptionInfo)
 
     def test_handshake_to_serf_agent(self, rpc):
         assert rpc.handshake().head == {b'Seq': 0, b'Error': b''}
@@ -118,6 +124,9 @@ class TestSerfConnection(object):
 
             def recv(self, size):
                 return ""
+
+            def close(self):
+                pass
 
         rpc._socket = MockSocket()
 
