@@ -98,6 +98,64 @@ class SerfConnection(object):
 
         return response
 
+    def stream(self, event_type='*', callback=None, timeout=None, args=(), kwargs=None):
+        """
+        Sends stream command to Serf and start streaming.
+        Call callback function for each received message.
+
+        :param event_type: type of event to subcribe
+        :param callback: must be a function
+        :param timeout: must be None for streaming forever
+        :param args: additional args to be passed into callback
+        :param kwargs: additional kwargs to be passed into callback
+        """
+
+        if kwargs is None:
+            kwargs = {}
+
+        if not hasattr(callback, '__call__'):
+            raise TypeError('callback must be a function')
+
+        self.call('stream', {"Type": event_type}, expect_body=False)
+
+        # Continue reading from the network until ..
+        self._socket.settimeout(timeout)
+
+        stop_reading = False
+        sec = 0
+
+        while not stop_reading:
+            response = SerfResult()
+            unpacker = msgpack.Unpacker(object_hook=self._decode_addr_key)
+
+            try:
+                buf = self._socket.recv(self._socket_recv_size)
+                if len(buf) == 0:  # Connection was closed.
+                    raise SerfConnectionError("Connection closed by peer")
+                unpacker.feed(buf)
+            except socket.timeout:
+                raise SerfTimeout(
+                    "timeout while waiting for an RPC response. (Have %s so"
+                    "far)", response)
+
+            for message in unpacker:
+                if response.head is None:
+                    response.head = message
+                elif response.body is None:
+                    response.body = message
+                else:
+                    raise SerfProtocolError("protocol handler got more than 2 messages. Unexpected message is: %s", message)
+
+            sec = response.head.get('Seq')
+
+            stop_reading = callback(response, *args, **kwargs)
+
+        # stop streaming
+        self.call('stop', {"Stop": sec}, expect_body=False)
+        # set original value
+        self._socket.settimeout(self.timeout)
+
+
     def handshake(self):
         """
         Sets up the connection with the Serf agent and does the
