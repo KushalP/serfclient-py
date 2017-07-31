@@ -45,7 +45,7 @@ class SerfConnection(object):
                'p': self.port,
                't': self.timeout}
 
-    def call(self, command, params=None, expect_body=True):
+    def call(self, command, params=None, expect_body=True, stream=False):
         """
         Sends the provided command to Serf for evaluation, with
         any parameters as the message body.
@@ -61,16 +61,9 @@ class SerfConnection(object):
         else:
             self._socket.sendall(header)
 
-        # The number of msgpack messages that are expected
-        # in response to this command.
-        messages_expected = 2 if expect_body else 1
-
-        response = SerfResult()
         unpacker = msgpack.Unpacker(object_hook=self._decode_addr_key)
 
-        # Continue reading from the network until the expected number of
-        # msgpack messages have been received.
-        while messages_expected > 0:
+        def read_from_socket():
             try:
                 buf = self._socket.recv(self._socket_recv_size)
                 if len(buf) == 0:  # Connection was closed.
@@ -81,20 +74,65 @@ class SerfConnection(object):
                     "timeout while waiting for an RPC response. (Have %s so"
                     "far)", response)
 
-            # Might have received enough to deserialise one or more
-            # messages, try to fill out the response object.
-            for message in unpacker:
-                if response.head is None:
-                    response.head = message
-                elif response.body is None:
-                    response.body = message
-                else:
-                    raise SerfProtocolError(
-                        "protocol handler got more than 2 messages. "
-                        "Unexpected message is: %s", message)
+        if stream:
+            def keep_reading_from_stream(init=[]):
+                sub_response = SerfResult()
+                while True:
+                    if init is not None:
+                        it = init
+                        init = None
+                    else:
+                        if self._socket is None:
+                            return
+                        read_from_socket()
+                        it = unpacker
+                    for msg in it:
+                        if sub_response.head is None:
+                            sub_response.head = msg
+                        elif sub_response.body is None:
+                            sub_response.body = msg
+                            yield sub_response
+                            sub_response = SerfResult()
+            mem = []
+            messages_expected = 1
+            while messages_expected > 0:
+                read_from_socket()
+                # Might have received enough to deserialise one or more
+                # messages, try to fill out the response object.
+                for message in unpacker:
+                    mem.append(message)
+                    messages_expected -= 1
 
-                # Expecting one fewer message now.
-                messages_expected -= 1
+            # Disable timeout while we are in streaming mode
+            self._socket.settimeout(None)
+
+            response = SerfResult()
+            response.head = mem.pop()
+            response.body = keep_reading_from_stream(mem)
+        else:
+            # The number of msgpack messages that are expected
+            # in response to this command.
+            messages_expected = 2 if expect_body else 1
+
+            response = SerfResult()
+            # Continue reading from the network until the expected number of
+            # msgpack messages have been received.
+            while messages_expected > 0:
+                read_from_socket()
+                # Might have received enough to deserialise one or more
+                # messages, try to fill out the response object.
+                for message in unpacker:
+                    if response.head is None:
+                        response.head = message
+                    elif response.body is None:
+                        response.body = message
+                    else:
+                        raise SerfProtocolError(
+                            "protocol handler got more than 2 messages. "
+                            "Unexpected message is: %s", message)
+
+                    # Expecting one fewer message now.
+                    messages_expected -= 1
 
         return response
 

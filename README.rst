@@ -52,6 +52,17 @@ Getting Started
     with closing(SerfClient()) as client:
         client.event('foo', 'bar')
 
+Stream usage:
+
+.. code-block:: python
+
+    from contextlib import closing
+    from serfclient.client import SerfClient
+
+    with closing(SerfClient(timeout=None)) as client:
+        for response in client.stream('*').body:
+            print(response)
+
 Development
 ------------
 

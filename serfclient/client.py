@@ -15,6 +15,12 @@ class SerfClient(object):
         if rpc_auth:
             self.connection.auth(rpc_auth)
 
+    def stream(self, event_types='*'):
+        if isinstance(event_types, list):
+            event_types = ','.join(event_types)
+        return self.connection.call(
+            'stream', {'Type': event_types}, stream=True)
+
     def event(self, name, payload=None, coalesce=True):
         """
         Send an event to the cluster. Can take an optional payload as well,
