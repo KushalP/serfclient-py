@@ -1,6 +1,17 @@
 Changelog
 =========
 
+1.2.0
+-----
+
+- Deprecate support for Python 2.6
+- Implemented `client.stream()` - `#34
+  <https://github.com/KushalP/serfclient-py/pull/34>`_
+- Added support for Python 3.5 and 3.6 - `#35
+  <https://github.com/KushalP/serfclient-py/pull/35>`_
+- Change msgpack-python requirement to msgpack - `#36
+  <https://github.com/KushalP/serfclient-py/pull/36>`_
+
 1.1.0
 -----
 
