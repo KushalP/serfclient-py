@@ -6,7 +6,6 @@ python:
   - "3.3"
   - "3.2"
   - "2.7"
-  - "2.6"
 before_install:
   - wget https://releases.hashicorp.com/serf/0.7.0/serf_0.7.0_linux_amd64.zip
   - unzip serf_0.7.0_linux_amd64.zip
