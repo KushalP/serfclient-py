@@ -7,9 +7,6 @@ service discovery and orchestration.
 .. image:: https://secure.travis-ci.org/KushalP/serfclient-py.png?branch=master
     :alt: Travis-CI badge
     :target: http://travis-ci.org/KushalP/serfclient-py
-.. image:: https://gemnasium.com/KushalP/serfclient-py.png
-    :alt: Gemnasium badge
-    :target: https://gemnasium.com/KushalP/serfclient-py
 .. image:: https://badge.fury.io/py/serfclient.svg
     :alt: PyPI latest version badge
     :target: https://pypi.python.org/pypi/serfclient
