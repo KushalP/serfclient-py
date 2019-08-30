@@ -124,6 +124,12 @@ class TestSerfClientCommands(object):
             assert key in stats.body
             assert isinstance(stats.body[key], dict)
 
+    def test_get_coordinate_well_formed(self, serf):
+        coordinate = serf.get_coordinate("host1")
+        assert b'Coord' in coordinate.body
+        for key in [b'Height', b'Error', b'Vec', b'Adjustment']:
+            assert key in coordinate.body[b'Coord']
+
     def test_close(self, serf):
         assert serf.connection is not None
         serf.close()

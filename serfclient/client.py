@@ -105,3 +105,9 @@ class SerfClient(object):
 
         return self.connection.call('tags', {"DeleteTags": tags},
                                     expect_body=False)
+
+    def get_coordinate(self, node):
+        """
+        Get the coordination of a node
+        """
+        return self.connection.call("get-coordinate", {"Node": node})
