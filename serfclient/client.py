@@ -88,3 +88,20 @@ class SerfClient(object):
         if self.connection:
             self.connection.close()
             self.connection = None
+
+    def set_tag(self, tag, value):
+        """
+        Set a tag of a node. Will fire a member update event
+        """
+        return self.connection.call('tags', {"Tags": {tag: value}},
+                                    expect_body=False)
+
+    def delete_tag(self, tags):
+        """
+        Delete a tag of a node. Will fire a member update event
+        """
+        if not isinstance(tags, (list, tuple)):
+            tags = [tags]
+
+        return self.connection.call('tags', {"DeleteTags": tags},
+                                    expect_body=False)
