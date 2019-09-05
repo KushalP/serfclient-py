@@ -29,9 +29,10 @@ class TestSerfClientStream(object):
         all_responses = []
         count = 0
         for response in response.body:
-            all_responses.append(response)
-            if len(all_responses) == 2:
-                serf.close()
+            if response.body[b'Event'] == b'user':
+                all_responses.append(response)
+                if len(all_responses) == 2:
+                    serf.close()
 
         sorted_responses = sorted([
             [

@@ -30,6 +30,17 @@ class TestSerfClientCommands(object):
     def test_initialises_a_serf_connection_on_creation(self, serf):
         assert serf.connection is not None
 
+    def test_set_a_tag(self, serf):
+        assert serf.set_tag('hello', 'world').head == {b'Error': b'',
+                                                       b'Seq': 1}
+        members = serf.members(tags={'hello': 'world'})
+        assert len(members.body[b'Members']) == 1
+
+    def test_delete_a_tag(self, serf):
+        assert serf.delete_tag('hello').head == {b'Error': b'', b'Seq': 1}
+        members = serf.members(tags={'hello': 'world'})
+        assert len(members.body[b'Members']) == 0
+
     def test_sending_a_simple_event(self, serf):
         assert serf.event('foo', 'bar').head == {b'Error': b'', b'Seq': 1}
 
