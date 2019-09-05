@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.3.0 (WIP)
+-----------
+
+- Implemented `client.set_tag()` and `client.delete_tag()` - `#38
+  <https://github.com/KushalP/serfclient-py/pull/38>`_
+
 1.2.0
 -----
 
