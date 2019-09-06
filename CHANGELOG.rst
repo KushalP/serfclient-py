@@ -6,6 +6,8 @@ Changelog
 
 - Implemented `client.set_tag()` and `client.delete_tag()` - `#38
   <https://github.com/KushalP/serfclient-py/pull/38>`_
+- Implemented `client.get_coordinate()` - `#39
+  <https://github.com/KushalP/serfclient-py/pull/39>`_
 
 1.2.0
 -----
